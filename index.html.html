@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Surprise For You!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-color: #050510; --gold: #FFD700; --diamond: #b9f2ff; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: var(--bg-color); color: white; font-family: 'Poppins', sans-serif; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        
+        #reveal-btn { padding: 20px 50px; font-size: 1.5rem; background: linear-gradient(135deg, #ff007a, #7a00ff); border: none; border-radius: 50px; color: white; cursor: pointer; box-shadow: 0 0 20px rgba(255, 0, 122, 0.6); transition: all 0.3s ease; font-weight: 600; z-index: 100; animation: pulse 2s infinite; }
+        #reveal-btn:hover { transform: scale(1.1); box-shadow: 0 0 40px rgba(255, 0, 122, 0.9); }
+        @keyframes pulse { 0% { box-shadow: 0 0 20px rgba(255, 0, 122, 0.6); } 50% { box-shadow: 0 0 40px rgba(255, 0, 122, 0.9); } 100% { box-shadow: 0 0 20px rgba(255, 0, 122, 0.6); } }
+
+        .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 2s ease-in-out; text-align: center; padding: 20px; box-sizing: border-box; }
+        .active { opacity: 1; pointer-events: auto; }
+
+        h1 { font-family: 'Playfair Display', serif; margin: 0; }
+        .floating-text { font-size: 3rem; text-shadow: 0 0 20px rgba(255, 255, 255, 0.8); transform: translateY(30px); opacity: 0; transition: transform 2s ease, opacity 2s ease; }
+        .text-visible { transform: translateY(0); opacity: 1; }
+        .diamond-text { color: var(--diamond); text-shadow: 0 0 10px var(--diamond), 0 0 30px var(--diamond); font-style: italic; }
+
+        .frame { position: relative; width: 300px; height: 400px; border-radius: 20px; padding: 10px; background: linear-gradient(45deg, #FFD700, #ff8c00, #FFD700); box-shadow: 0 0 50px rgba(255, 215, 0, 0.8); transform: scale(0.5) rotate(-5deg); opacity: 0; transition: all 3s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: float 6s ease-in-out infinite; }
+        .frame-active { transform: scale(1) rotate(0deg); opacity: 1; }
+        .frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 15px; filter: grayscale(100%); transition: filter 3s ease 2s; }
+        .frame-active img { filter: grayscale(0%); }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+
+        .traits { margin-top: 40px; font-size: 1.5rem; line-height: 2; opacity: 0; transform: translateY(20px); transition: all 2s ease 3s; }
+        .traits-active { opacity: 1; transform: translateY(0); }
+        .highlight { color: #ff007a; font-weight: 600; }
+
+        .falling-emoji { position: absolute; font-size: 2rem; animation: fall linear forwards; z-index: 50; }
+        @keyframes fall { from { transform: translateY(-100px) rotate(0deg); opacity: 1; } to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <!-- Loaded the exact local audio file you saved! -->
+    <audio id="bg-audio" loop>
+        <source src="WhatsApp Audio 2026-03-08 at 9.00.23 PM - Copy.mpeg" type="audio/mpeg">
+    </audio>
+
+    <button id="reveal-btn">Tap to Open Your Surprise 🎁</button>
+
+    <div id="scene1" class="scene">
+        <h1 class="floating-text" id="t1">In life we meet many people...</h1>
+    </div>
+
+    <div id="scene2" class="scene">
+        <h1 class="floating-text diamond-text" id="t2">But very few shine like diamonds 💎</h1>
+    </div>
+
+    <div id="scene3" class="scene">
+        <div class="frame" id="celebrity-frame">
+            <!-- Loaded the exact local photo you saved! -->
+            <img src="Screenshot 2026-03-08 192920 - Copy.png" alt="Beautiful Friend">
+        </div>
+        
+        <div class="traits" id="traits-text">
+            You are the most precious friend in my life.<br>
+            Your kindness and care always give me peace.<br><br>
+            🎉 <strong>Happy Birthday Janani!</strong> 🎉
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        const btn = document.getElementById('reveal-btn');
+        const audio = document.getElementById('bg-audio');
+        const scenes = [document.getElementById('scene1'), document.getElementById('scene2'), document.getElementById('scene3')];
+        const sleep = ms => new Promise(res => setTimeout(res, ms));
+
+        function createFallingEmojis() {
+            const emojis = ['🎂', '💖', '✨', '💎', '🎉', '🌟', '👯‍♀️', '🎁'];
+            const container = document.body;
+            setInterval(() => {
+                const el = document.createElement('div');
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.classList.add('falling-emoji');
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
+                el.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                container.appendChild(el);
+                setTimeout(() => el.remove(), 7000);
+            }, 300);
+        }
+
+        btn.addEventListener('click', async () => {
+            audio.volume = 0.8;
+            audio.play().catch(e => console.log(e));
+            btn.style.opacity = '0';
+            btn.style.pointerEvents = 'none';
+            await sleep(500);
+
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#ff007a', '#7a00ff', '#FFD700', '#ffffff'] });
+            createFallingEmojis();
+
+            scenes[0].classList.add('active');
+            await sleep(500); document.getElementById('t1').classList.add('text-visible');
+            await sleep(4000); document.getElementById('t1').classList.remove('text-visible');
+            scenes[0].classList.remove('active'); await sleep(2000);
+
+            scenes[1].classList.add('active');
+            await sleep(500); document.getElementById('t2').classList.add('text-visible');
+            await sleep(4000); document.getElementById('t2').classList.remove('text-visible');
+            scenes[1].classList.remove('active'); await sleep(2000);
+
+            scenes[2].classList.add('active');
+            await sleep(100); document.getElementById('celebrity-frame').classList.add('frame-active');
+            document.getElementById('traits-text').classList.add('traits-active');
+
+            const animationEnd = Date.now() + 15000;
+            const interval = setInterval(function() {
+                if (Date.now() > animationEnd) return clearInterval(interval);
+                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#FFD700', '#ffffff'] });
+                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#FFD700', '#ffffff'] });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
